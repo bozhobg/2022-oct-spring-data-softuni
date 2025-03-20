@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class MyConnector {
 
-    private final static String DB_URL = "jdbc:mysql://localhost";
+    private final static String DB_URL = "jdbc:mysql://localhost:3312/orm";
     private final static String DB_USER = "root";
     private final static String DB_PASSWORD = "1234";
 

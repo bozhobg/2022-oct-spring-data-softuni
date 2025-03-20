@@ -3,7 +3,9 @@ package bg.softuni.orm;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class EntityManager<E> implements DBContext<E> {
 
@@ -14,6 +16,7 @@ public class EntityManager<E> implements DBContext<E> {
     }
 
     private Field getId(Class<?> entityClass) {
+
         return Arrays.stream(entityClass.getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(Id.class))
                 .findFirst()
@@ -27,29 +30,49 @@ public class EntityManager<E> implements DBContext<E> {
         primaryKey.setAccessible(true);
         Object value = primaryKey.get(entity);
 
-        if (value == null || (long) value < 0) {
+        if (value == null || (long) value <= 0) {
             return doInsert(entity, primaryKey);
         }
 
-        return doUpdate(entity, primaryKey);
+        return doUpdate(entity, value);
     }
 
-    private boolean doUpdate(E entity, Field primaryKey) {
-        return false;
+    private boolean doUpdate(E entity, Object idValue)
+            throws IllegalAccessException, SQLException {
+        String tableQuery = QueryFormatter.formatSQLAddressPart(
+                getTableName(entity.getClass()));
+        String idQuery = QueryFormatter.formatSqlValue(idValue);
+
+        Map<String, Object> columnNamesAndValuesMap = getColumnNamesAndValues(entity);
+        String setQueryListing = updateSetQueryListing(columnNamesAndValuesMap);
+
+        String sql = """
+                UPDATE %s
+                SET %s
+                WHERE `id` = %s;
+                """;
+
+        String query = String.format(sql, tableQuery, setQueryListing, idQuery);
+        int updatedRows = conn.prepareStatement(query).executeUpdate();
+
+        return updatedRows != 0;
     }
 
-    private boolean doInsert(E entity, Field primaryKey) throws SQLException {
-        // Getting table name from @Entity.name() anno element
+    private boolean doInsert(E entity, Field primaryKey)
+            throws SQLException, IllegalAccessException {
+
         String tableName = this.getTableName(entity.getClass());
 
-        // INSERT INTO t1(c1, c2, c3) VALUES (val1, val2, val3);
-        String sql = "INSERT INTO " + tableName + "()";
-        // get fields
-        Field[] declaredFields = entity.getClass().getDeclaredFields();
+        Map<String, Object> columnNamesAndValuesMap = getColumnNamesAndValues(entity);
 
-        // iterate and collect: 1. @Column.name(), 2. Field's value (change of access modifier);
-        // then add the data to the sql query
+        String[] columnNames = columnNamesAndValuesMap.keySet().toArray(String[]::new);
+        String columnsSql = formatQueryListing(columnNames, QueryFormatter::formatSQLAddressPart);
 
+        Object[] columnValues = columnNamesAndValuesMap.values().toArray(Object[]::new);
+        String valuesSql = formatQueryListing(columnValues, QueryFormatter::formatSqlValue);
+
+        String sql = "INSERT INTO " + tableName + "(" + columnsSql + ") " +
+                "VALUES (" + valuesSql + ");";
 
         int updateCount = conn.prepareStatement(sql).executeUpdate();
 
@@ -80,5 +103,47 @@ public class EntityManager<E> implements DBContext<E> {
     @Override
     public E findFirst(Class<E> table, String where) {
         return null;
+    }
+
+    private static <E> Map<String, Object> getColumnNamesAndValues(E entity)
+            throws IllegalAccessException {
+
+        Field[] declaredFields = entity.getClass().getDeclaredFields();
+        Map<String, Object> mapColumnValue = new LinkedHashMap<>();
+
+        for (Field field : declaredFields) {
+            Column columnAnnotation = field.getAnnotation(Column.class);
+
+            if (columnAnnotation == null) continue;
+
+            Class<?> type = field.getType();
+            field.setAccessible(true);
+            Object o = field.get(entity);
+
+            mapColumnValue.put(columnAnnotation.name(), o);
+        }
+
+        return mapColumnValue;
+    }
+
+    private static <T> String formatQueryListing(T[] arr, Function<T, String> mappingFunction) {
+
+        return Arrays.stream(arr)
+                .map(mappingFunction)
+                .collect(Collectors.joining(", "));
+    }
+
+    private String updateSetQueryListing(Map<String, Object> columnWithValueMap) {
+        List<String> updateSetDeclarations = new ArrayList<>();
+
+        for (Map.Entry<String, Object> e : columnWithValueMap.entrySet()) {
+            updateSetDeclarations.add(
+                    String.format("%s = %s",
+                            QueryFormatter.formatSQLAddressPart(e.getKey()),
+                            QueryFormatter.formatSqlValue(e.getValue()))
+            );
+        }
+
+        return String.join(", ", updateSetDeclarations);
     }
 }
