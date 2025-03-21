@@ -13,6 +13,13 @@ public class Main {
 
         EntityManager<Student> em = new EntityManager(MyConnector.getConnection());
         // testing ground
+        Student oldStudent = new Student("a", "666", 13, LocalDate.now());
+        oldStudent.setId(6);
+        em.persist(oldStudent);
 
+        Student newStudent = new Student("last", "lastPass", 38, LocalDate.now());
+        em.persist(newStudent);
+
+        MyConnector.getConnection().close();
     }
 }
