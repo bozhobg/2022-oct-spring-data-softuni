@@ -1,8 +1,8 @@
 package bg.softuni.entities;
 
-import bg.softuni.orm.Column;
-import bg.softuni.orm.Entity;
-import bg.softuni.orm.Id;
+import bg.softuni.orm.annotations.Column;
+import bg.softuni.orm.annotations.Entity;
+import bg.softuni.orm.annotations.Id;
 
 import java.time.LocalDate;
 
@@ -24,6 +24,8 @@ public class Student {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
+    public Student(){}
+
     public Student(
             String username,
             String password,
@@ -38,5 +40,16 @@ public class Student {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                ", registrationDate=" + registrationDate +
+                '}';
     }
 }
