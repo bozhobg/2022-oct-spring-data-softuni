@@ -31,7 +31,7 @@ public class EntityManager<E> implements DBContext<E> {
         Object value = primaryKey.get(entity);
 
         //    TODO: how dealt back when passing the field of primary key instead of the value? (given as example in problem)
-        if (value == null || (long) value <= 0) {
+        if (value == null || (int) value <= 0) {
             return doInsert(entity);
         }
 
@@ -114,7 +114,7 @@ public class EntityManager<E> implements DBContext<E> {
         stmt.execute(createTableSql);
     }
 
-    //    TODO: alter cases logic
+    //    TODO: alter cases logic: dropping for non-present field; checks on entity.persist()
     @Override
     @SuppressWarnings("unchecked")
     public void doAlter(E entity) throws SQLException {
@@ -130,7 +130,41 @@ public class EntityManager<E> implements DBContext<E> {
         stmt.executeUpdate(alterAddColumnsSql);
     }
 
-    private String getNewColumnDefinitionsListings(Class<E> entityClass) throws SQLException {
+    @Override
+    public boolean delete(E entity)
+            throws IllegalAccessException, SQLException {
+
+        Field idField = getId(entity.getClass());
+        idField.setAccessible(true);
+        Object valueObj = idField.get(entity);
+
+        if (valueObj == null || (int) valueObj <= 0) {
+            throw new IllegalArgumentException("Invalid id long value: " + valueObj);
+        }
+
+        int idValue = (int) valueObj;
+
+//        String sql = String.format(
+//                QueryTemplates.DELETE_ENTITY_FROM_TABLE_BY_ID,
+//                getTableName(entity.getClass()),
+//                idValue
+//        );
+//        Statement stmt = conn.createStatement();
+
+        PreparedStatement prStmt = conn.prepareStatement(String.format(
+                QueryTemplates.PR_STMT_DELETE_ENTITY_FROM_TABLE_BY_ID, getTableName(entity.getClass())));
+
+//        cannot set table names using ? in prepared stmts -> result 'set string' in sql
+//        prStmt.setString(1, getTableName(entity.getClass()));
+
+        prStmt.setInt(1, idValue);
+        int updatedRowCount = prStmt.executeUpdate();
+
+        return updatedRowCount != 0;
+    }
+
+    private String getNewColumnDefinitionsListings(Class<E> entityClass)
+            throws SQLException {
 
         Set<String> existingColLabels = getExistingColumnLabelsFromTable(getTableName(entityClass));
 

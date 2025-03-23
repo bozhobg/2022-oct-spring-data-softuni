@@ -26,4 +26,6 @@ public interface DBContext<E> {
     void doCreate(Class<E> entityClass) throws SQLException;
 
     void doAlter(E entity) throws SQLException;
+
+    boolean delete(E entity) throws IllegalAccessException, SQLException;
 }

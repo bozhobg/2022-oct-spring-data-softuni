@@ -18,6 +18,7 @@ public class QueryFormatter {
             case Float f -> f.toString();
             case Double d -> d.toString();
             case Boolean b -> b.toString().toUpperCase();
+            case null -> "NULL";
             default -> "'" + o + "'";
         };
     }

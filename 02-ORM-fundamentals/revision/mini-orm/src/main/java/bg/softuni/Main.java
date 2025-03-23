@@ -37,13 +37,17 @@ public class Main {
 
         EntityManager<Course> emCourse = new EntityManager<>(MyConnector.getConnection());
 //        emCourse.doCreate(Course.class);
-//        emCourse.persist(new Course(
-//                "Math Fundamentals",
-//                LocalDate.now(),
-//                LocalDate.now().plusMonths(3)
-//        ));
+        emCourse.persist(new Course(
+                "Math Fundamentals 2",
+                LocalDate.now(),
+                LocalDate.now().plusMonths(3)
+        ));
 
-        emCourse.doAlter(new Course());
+//        emCourse.doAlter(new Course());
+
+        Course courseById = emCourse.findFirst(Course.class, "WHERE `id` = 1");
+        boolean isDelete = emCourse.delete(courseById);
+        System.out.println("Row deleted: " + isDelete);
 
         MyConnector.getConnection().close();
     }

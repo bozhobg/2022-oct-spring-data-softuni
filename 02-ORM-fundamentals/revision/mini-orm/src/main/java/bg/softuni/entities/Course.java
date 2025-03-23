@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class Course {
 
     @Id
-    private long id;
+    private int id;
 
     @Column
     private String name;
@@ -21,8 +21,8 @@ public class Course {
     @Column(name = "end_name")
     private LocalDate endDate;
 
-    @Column
-    private String leader;
+//    @Column
+//    private String leader;
 
     public Course() {}
 
