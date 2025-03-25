@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration
+        PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!-- Version 8 MySQL hibernate-cfg.xml example for Hibernate 5 -->
+
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="hibernate.dialect">
+            org.hibernate.dialect.MySQLDialect
+        </property>
+
+        <property name="hibernate.connection.driver_class">
+            com.mysql.jdbc.Driver
+        </property>
+
+        <!-- Connection Settings -->
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3312/school?createDatabaseIfNotExist=true
+        </property>
+
+        <property name="hibernate.connection.username">
+            root
+        </property>
+
+        <property name="hibernate.connection.password">
+            1234
+        </property>
+
+        <property name="hbm2ddl.auto">
+            update
+        </property>
+
+        <!-- List of XML mapping files -->
+        <mapping resource="student.hbm.xml"/>
+
+    </session-factory>
+
+</hibernate-configuration>
