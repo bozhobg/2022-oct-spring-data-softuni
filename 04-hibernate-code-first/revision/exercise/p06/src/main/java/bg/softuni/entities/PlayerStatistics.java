@@ -1,20 +1,27 @@
 package bg.softuni.entities;
 
+import bg.softuni.entities.composite_pks.GamePlayerEmbeddedPK;
+import bg.softuni.entities.composite_pks.GamePlayerIdClassPK;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "player_statistics")
+@IdClass(GamePlayerIdClassPK.class)
 public class PlayerStatistics {
 //    PlayerStatistics – Game, Player, Scored Goals, Player Assists, Played Minutes During Game, (PK = Game +
 //Player)
 
-//    TODO: how to make composite primary key of Game + Player
-//    TODO: @Embeddable (on class with id fields) @EmbeddedId (as primary field) OR @ClassId(on class with id fields) + @Id(on fields)
+//    @EmbeddedId // w/ @Embeddable
+//    private GamePlayerEmbeddedPK id;
 
-    @ManyToOne
+    @Id
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+//    @MapsId("gameId") // w/ @Embeddable
     private Game game;
 
-    @ManyToOne
+    @Id
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+//    @MapsId("playerId") // w/ @Embeddable
     private Player player;
 
     @Column(name = "scored_golas")
