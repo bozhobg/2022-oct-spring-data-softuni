@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: exercise
+  datasource: #data properties
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: "jdbc:mysql://localhost:3312/bookshop_system?createDatabaseIfNotExist=true"
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+logging:
+  level:
+    org: WARN
+    org.hibernate.sql: DEBUG
+    org.hibernate.type.descriptor: TRACE
