@@ -1,6 +1,6 @@
 package com.example.advquerying;
 
-import com.example.advquerying.entities.Ingredient;
+import com.example.advquerying.constant.FormatTemplatesConstants;
 import com.example.advquerying.entities.Size;
 import com.example.advquerying.service.IngredientService;
 import com.example.advquerying.service.ShampooService;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -41,11 +40,28 @@ public class ConsoleRunner implements CommandLineRunner {
 //        p05CountShampoosByPrice();
 //        p06JpqlSelectShampoosByIngredients();
 //        p07JpqlSelectShampoosByIngredientsCount();
-        p08JpqlDeleteIngredientsByName();
+//        p08JpqlDeleteIngredientsByName();
+//        p09JpqlUpdateIngredientsPrice();
+        p10JpqlUpdateIngredientsPriceByName();
+    }
+
+    private void p10JpqlUpdateIngredientsPriceByName() {
+        String name = SC.nextLine();
+        BigDecimal percentIncrease = new BigDecimal(10);
+        int updatedCount = this.ingredientService.updateIngredientsPriceByName(percentIncrease, name);
+        System.out.printf(FormatTemplatesConstants.UPDATED_INGREDIENTS_FORMAT, updatedCount);
+    }
+
+    private void p09JpqlUpdateIngredientsPrice() {
+        BigDecimal percentIncrease = new BigDecimal(10);
+        int updatedCount = this.ingredientService.updateIngredientsPrice(percentIncrease);
+        System.out.printf(FormatTemplatesConstants.UPDATED_INGREDIENTS_FORMAT, updatedCount);
     }
 
     private void p08JpqlDeleteIngredientsByName() {
-
+        String input = SC.nextLine();
+        int deletedCount = this.ingredientService.deleteByName(input);
+        System.out.printf(FormatTemplatesConstants.DELETED_INGREDIENTS_FORMAT, deletedCount);
     }
 
     private void p07JpqlSelectShampoosByIngredientsCount() {

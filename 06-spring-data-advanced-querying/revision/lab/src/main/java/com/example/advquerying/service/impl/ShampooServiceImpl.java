@@ -1,6 +1,6 @@
 package com.example.advquerying.service.impl;
 
-import com.example.advquerying.constant.FormatTemplates;
+import com.example.advquerying.constant.FormatTemplatesConstants;
 import com.example.advquerying.entities.Ingredient;
 import com.example.advquerying.entities.Shampoo;
 import com.example.advquerying.entities.Size;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -97,7 +95,7 @@ public class ShampooServiceImpl implements ShampooService {
 
     private static String formatShampooToStringOfBrandSizePrice(Shampoo s) {
         return String.format(
-                FormatTemplates.SHAMPOO_BRAND_SIZE_PRICE,
+                FormatTemplatesConstants.SHAMPOO_BRAND_SIZE_PRICE,
                 s.getBrand(), s.getSize().name(), s.getPrice().toString()
         );
     }
