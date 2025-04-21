@@ -12,5 +12,7 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     List<Author> findAuthorsByBooks_ReleaseDateBefore(LocalDate date);
 
+    List<Author> findAllByFirstNameEndsWith(String endingWith);
 
+    List<Author> findAllByLastNameStartingWithIgnoreCase(String startingWith);
 }

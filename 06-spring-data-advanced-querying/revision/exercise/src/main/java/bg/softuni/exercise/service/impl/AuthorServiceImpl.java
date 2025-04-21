@@ -1,5 +1,6 @@
 package bg.softuni.exercise.service.impl;
 
+import bg.softuni.exercise.constants.TemplateFormatsAndMessages;
 import bg.softuni.exercise.entities.Author;
 import bg.softuni.exercise.repositories.AuthorRepository;
 import bg.softuni.exercise.service.AuthorService;
@@ -10,6 +11,8 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
@@ -57,5 +60,15 @@ public class AuthorServiceImpl implements AuthorService {
                 .sorted((a1, a2) -> a2.getBooks().size() - a1.getBooks().size())
                 .map(a -> a.getFirstName() + " " + a.getLastName() + " " + a.getBooks().size())
                 .forEach(System.out::println);
+    }
+
+    @Override
+    public String getOutputAuthorsFirstNameEndingWith(String firstNameEnding) {
+        return this.authorRepository.findAllByFirstNameEndsWith(firstNameEnding)
+                .stream()
+                .map(a -> String.format(
+                        TemplateFormatsAndMessages.FORMAT_AUTHOR_FIRST_LAST_NAME,
+                        a.getFirstName(), a.getLastName())
+                ).collect(Collectors.joining(System.lineSeparator()));
     }
 }

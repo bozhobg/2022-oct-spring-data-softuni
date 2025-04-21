@@ -16,4 +16,6 @@ public interface AuthorService {
     void printAuthorsWithBooksBefore(LocalDate date);
 
     void printAllAuthorsOrderedByBooksCount();
+
+    String getOutputAuthorsFirstNameEndingWith(String firstNameEnding);
 }
