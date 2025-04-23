@@ -1,7 +1,9 @@
 package bg.softuni.exercise.service.impl;
 
 import bg.softuni.exercise.constants.TemplateFormatsAndMessages;
-import bg.softuni.exercise.entities.Author;
+import bg.softuni.exercise.domain.dto.AuthorFullNameCopiesSumDTO;
+import bg.softuni.exercise.domain.dto.AuthorFullNameCopiesSumRecord;
+import bg.softuni.exercise.domain.entities.Author;
 import bg.softuni.exercise.repositories.AuthorRepository;
 import bg.softuni.exercise.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,6 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,5 +71,30 @@ public class AuthorServiceImpl implements AuthorService {
                         TemplateFormatsAndMessages.FORMAT_AUTHOR_FIRST_LAST_NAME,
                         a.getFirstName(), a.getLastName())
                 ).collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    @Override
+    public String getOutputAuthorsFullNameAndTotalCopiesDTO() {
+
+        return this.authorRepository.selectAuthorsFullNameAndSumAllCopiesDTO()
+                .stream()
+                .sorted(Comparator.comparingLong(AuthorFullNameCopiesSumDTO::getTotalCopies).reversed())
+                .map(AuthorFullNameCopiesSumDTO::toString)
+                .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    @Override
+    public String getOutputAuthorsFullNameAndTotalCopiesRecord() {
+
+        return this.authorRepository.selectAuthorsFullNameAndSumAllCopiesRecord()
+                .stream()
+                .sorted(Comparator.comparingLong(AuthorFullNameCopiesSumRecord::totalCopies).reversed())
+                .map(AuthorFullNameCopiesSumRecord::toString)
+                .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    @Override
+    public int callBooksCountAuthorFirstAndLastName(String firstName, String lastName) {
+        return this.authorRepository.callGetBooksCountByAuthorNames(firstName, lastName);
     }
 }

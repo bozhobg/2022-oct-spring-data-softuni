@@ -1,6 +1,6 @@
 package bg.softuni.exercise;
 
-import bg.softuni.exercise.entities.enums.EditionEnum;
+import bg.softuni.exercise.domain.entities.enums.EditionEnum;
 import bg.softuni.exercise.service.AuthorService;
 import bg.softuni.exercise.service.BookService;
 import bg.softuni.exercise.service.SeedService;
@@ -49,17 +49,60 @@ public class ConsoleRunner implements CommandLineRunner {
 //        pr04NotReleasedBooks();
 //        pr05BookReleasedBeforeDate();
 //        pr06AuthorsSearch();
-//        pr07AuthorsSearch();
-        pr08BookTitleSearch();
+//        pr07BookSearch();
+//        pr08BookTitleSearch();
+//        pr09CountBooks();
+//        pr10TotalBookCopies();
+//        pr11ReducedBook();
+//        pr12IncreaseBookCopies();
+//        pr13RemoveBooks();
+        pr14StoredProcedure();
+    }
+
+    private void pr14StoredProcedure() {
+        String firstNameInput = SC.nextLine();
+        String lastNameInput = SC.nextLine();
+//        TODO: Why in db params 2 in query 3? how is that? -> is it 2 in and 1 out as expected
+//        TODO: second approach @NamedStoredProcedureQueries
+        System.out.println(this.authorService.callBooksCountAuthorFirstAndLastName(firstNameInput, lastNameInput));
+    }
+
+    private void pr13RemoveBooks() {
+        Integer copies = Integer.parseInt(SC.nextLine());
+        System.out.println(this.bookService.deleteBooksWithCopiesLessThan(copies));
+    }
+
+    private void pr12IncreaseBookCopies() {
+        String dateInput = SC.nextLine();
+        LocalDate releasedAfter = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("dd MMM yyyy"));
+        Integer bookCopiesIncrease = Integer.parseInt(SC.nextLine());
+
+        System.out.println(this.bookService.increaseAllBookCopiesWithAfterReleaseDate(releasedAfter, bookCopiesIncrease));
+    }
+
+    private void pr11ReducedBook() {
+        String bookTitle = SC.nextLine();
+        System.out.println(this.bookService.getOutputGetReducedInfoDTO(bookTitle));
+    }
+
+    private void pr10TotalBookCopies() {
+//        System.out.println(this.authorService.getOutputAuthorsFullNameAndTotalCopiesDTO());
+        System.out.println(this.authorService.getOutputAuthorsFullNameAndTotalCopiesRecord());
+    }
+
+    private void pr09CountBooks() {
+        int length = Integer.parseInt(SC.nextLine());
+        System.out.println(this.bookService.getOutputCountTitleLongerThan(length));
     }
 
     private void pr08BookTitleSearch() {
-
-    }
-
-    private void pr07AuthorsSearch() {
         String input = SC.nextLine();
         System.out.println(this.bookService.getOutputAllAuthorLastNameStartingWith(input));
+    }
+
+    private void pr07BookSearch() {
+        String input = SC.nextLine();
+        System.out.println(this.bookService.getOutputAllBooksTitleContaining(input));
     }
 
     private void pr06AuthorsSearch() {

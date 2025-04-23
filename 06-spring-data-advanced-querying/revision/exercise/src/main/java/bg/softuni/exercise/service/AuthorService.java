@@ -1,6 +1,6 @@
 package bg.softuni.exercise.service;
 
-import bg.softuni.exercise.entities.Author;
+import bg.softuni.exercise.domain.entities.Author;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,4 +18,10 @@ public interface AuthorService {
     void printAllAuthorsOrderedByBooksCount();
 
     String getOutputAuthorsFirstNameEndingWith(String firstNameEnding);
+
+    String getOutputAuthorsFullNameAndTotalCopiesDTO();
+
+    String getOutputAuthorsFullNameAndTotalCopiesRecord();
+
+    int callBooksCountAuthorFirstAndLastName(String firstName, String lastName);
 }

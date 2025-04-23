@@ -1,6 +1,6 @@
 package bg.softuni.exercise.repositories;
 
-import bg.softuni.exercise.entities.Category;
+import bg.softuni.exercise.domain.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

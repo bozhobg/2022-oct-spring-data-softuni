@@ -1,4 +1,4 @@
-package bg.softuni.exercise.entities.enums;
+package bg.softuni.exercise.domain.entities.enums;
 
 public enum AgeRestrictionEnum {
     MINOR,

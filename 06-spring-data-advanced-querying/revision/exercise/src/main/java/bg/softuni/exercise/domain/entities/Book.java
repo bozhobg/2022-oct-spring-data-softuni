@@ -1,12 +1,11 @@
-package bg.softuni.exercise.entities;
+package bg.softuni.exercise.domain.entities;
 
-import bg.softuni.exercise.entities.enums.AgeRestrictionEnum;
-import bg.softuni.exercise.entities.enums.EditionEnum;
+import bg.softuni.exercise.domain.entities.enums.AgeRestrictionEnum;
+import bg.softuni.exercise.domain.entities.enums.EditionEnum;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 

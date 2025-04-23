@@ -1,9 +1,10 @@
 package bg.softuni.exercise.service.impl;
 
 import bg.softuni.exercise.constants.TemplateFormatsAndMessages;
-import bg.softuni.exercise.entities.Book;
-import bg.softuni.exercise.entities.enums.AgeRestrictionEnum;
-import bg.softuni.exercise.entities.enums.EditionEnum;
+import bg.softuni.exercise.domain.dto.BookReducedDTO;
+import bg.softuni.exercise.domain.entities.Book;
+import bg.softuni.exercise.domain.entities.enums.AgeRestrictionEnum;
+import bg.softuni.exercise.domain.entities.enums.EditionEnum;
 import bg.softuni.exercise.exception.InvalidEnumValue;
 import bg.softuni.exercise.repositories.BookRepository;
 import bg.softuni.exercise.service.BookService;
@@ -12,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -92,7 +93,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public String getOutputAllBooksNotReleasedInYear(int year) {
-        return getParsedOutput(this.bookRepository.findAllByReleaseYearDifferentThan(year), Book::getTitle);
+        return getParsedOutput(this.bookRepository.selectAllByReleaseYearDifferentThan(year), Book::getTitle);
     }
 
     @Override
@@ -106,13 +107,38 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public String getOutputAllTitleContaining(String containing) {
+    public String getOutputAllBooksTitleContaining(String containing) {
         return getParsedOutput(
                 this.bookRepository.findAllByTitleContainingIgnoreCase(containing),
-                b -> String.format(
-                        TemplateFormatsAndMessages.FORMAT_BOOK_TITLE_AUTHOR_NAME,
-                        b.getTitle(), b.getAuthor().getFirstName(), b.getAuthor().getLastName())
+                Book::getTitle
         );
+    }
+
+    @Override
+    public String getOutputCountTitleLongerThan(int length) {
+
+        return String.format(
+                TemplateFormatsAndMessages.FORMAT_BOOK_COUNT_TITLE_LENGTH_GREATER,
+                this.bookRepository.selectAllByTitleLengthGreaterThan(length),
+                length
+        );
+    }
+
+    @Override
+    public String getOutputGetReducedInfoDTO(String bookTitle) {
+        return this.bookRepository.selectBookReducedDTOByTitle(bookTitle)
+                .map(BookReducedDTO::toString)
+                .orElse(TemplateFormatsAndMessages.INVALID_BOOK_TITLE);
+    }
+
+    @Override
+    public long increaseAllBookCopiesWithAfterReleaseDate(LocalDate afterDate, Integer copiesIncrease) {
+        return this.bookRepository.increaseBookCopiesWithReleaseDateAfter(afterDate, copiesIncrease) * copiesIncrease;
+    }
+
+    @Override
+    public int deleteBooksWithCopiesLessThan(Integer copies) {
+        return this.bookRepository.deleteAllByCopiesLessThan(copies);
     }
 
     @Override

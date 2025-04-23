@@ -1,6 +1,6 @@
 package bg.softuni.exercise.service.impl;
 
-import bg.softuni.exercise.entities.Category;
+import bg.softuni.exercise.domain.entities.Category;
 import bg.softuni.exercise.repositories.CategoryRepository;
 import bg.softuni.exercise.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

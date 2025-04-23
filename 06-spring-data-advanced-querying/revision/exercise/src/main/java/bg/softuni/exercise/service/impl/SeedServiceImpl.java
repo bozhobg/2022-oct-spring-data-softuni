@@ -1,10 +1,10 @@
 package bg.softuni.exercise.service.impl;
 
-import bg.softuni.exercise.entities.Author;
-import bg.softuni.exercise.entities.Book;
-import bg.softuni.exercise.entities.Category;
-import bg.softuni.exercise.entities.enums.AgeRestrictionEnum;
-import bg.softuni.exercise.entities.enums.EditionEnum;
+import bg.softuni.exercise.domain.entities.Author;
+import bg.softuni.exercise.domain.entities.Book;
+import bg.softuni.exercise.domain.entities.Category;
+import bg.softuni.exercise.domain.entities.enums.AgeRestrictionEnum;
+import bg.softuni.exercise.domain.entities.enums.EditionEnum;
 import bg.softuni.exercise.service.AuthorService;
 import bg.softuni.exercise.service.BookService;
 import bg.softuni.exercise.service.CategoryService;

@@ -1,4 +1,4 @@
-package bg.softuni.exercise.entities;
+package bg.softuni.exercise.domain.entities;
 
 import jakarta.persistence.*;
 

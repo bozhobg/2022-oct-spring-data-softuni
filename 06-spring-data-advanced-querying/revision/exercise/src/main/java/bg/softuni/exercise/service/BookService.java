@@ -1,7 +1,7 @@
 package bg.softuni.exercise.service;
 
-import bg.softuni.exercise.entities.Book;
-import bg.softuni.exercise.entities.enums.EditionEnum;
+import bg.softuni.exercise.domain.entities.Book;
+import bg.softuni.exercise.domain.entities.enums.EditionEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,7 +27,15 @@ public interface BookService {
 
     String getOutputAllBooksReleasedBefore(LocalDate date);
 
-    String getOutputAllTitleContaining(String containing);
-
     String getOutputAllAuthorLastNameStartingWith(String input);
+
+    String getOutputAllBooksTitleContaining(String titleContaining);
+
+    String getOutputCountTitleLongerThan(int length);
+
+    String getOutputGetReducedInfoDTO(String bookTitle);
+
+    long increaseAllBookCopiesWithAfterReleaseDate(LocalDate releasedAfter, Integer copiesIncrease);
+
+    int deleteBooksWithCopiesLessThan(Integer copies);
 }
